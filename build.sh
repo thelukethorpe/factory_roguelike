@@ -1,4 +1,4 @@
 #!/bin/bash
 
-make
-
+cmake -B build
+cmake --build build

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./build/game
+rm -rf build
