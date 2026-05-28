@@ -1,0 +1,14 @@
+Checks: >
+  bugprone-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  modernize-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+  -cppcoreguidelines-owning-memory,
+  -modernize-use-trailing-return-type
+
+WarningsAsErrors: 'bugprone-*,clang-analyzer-*'
