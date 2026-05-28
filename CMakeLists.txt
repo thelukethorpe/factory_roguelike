@@ -6,6 +6,32 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Debug build")
+
+    add_compile_options(
+        -g
+        -O0
+        -fsanitize=address
+        -fsanitize=undefined
+        -fno-omit-frame-pointer
+    )
+    
+    add_link_options(
+        -fsanitize=address
+        -fsanitize=undefined
+    )
+
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+    message(STATUS "Release build")
+
+    add_compile_options(
+        -O3
+    )
+
+endif()
+
 include(FetchContent)
 
 #
