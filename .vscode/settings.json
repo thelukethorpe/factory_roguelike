@@ -1,0 +1,20 @@
+{
+    "editor.formatOnSave": true,
+
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+
+    "clangd.arguments": [
+        "--clang-tidy",
+        "--completion-style=detailed"
+    ],
+
+    "C_Cpp.intelliSenseEngine": "disabled"
+}
