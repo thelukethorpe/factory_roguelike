@@ -74,6 +74,11 @@ add_library(transport_lib
     ${TRANSPORT_LIB_SOURCES}
 )
 
+target_include_directories(transport_lib
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 
 target_link_libraries(game PRIVATE SDL3::SDL3 transport_lib)
 
