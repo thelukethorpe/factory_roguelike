@@ -67,7 +67,7 @@ add_executable(game
 )
 
 file(GLOB_RECURSE TRANSPORT_LIB_SOURCES CONFIGURE_DEPENDS
-    src/transport/*.cpp
+    src/core/transport/*.cpp
 )
 
 add_library(transport_lib
