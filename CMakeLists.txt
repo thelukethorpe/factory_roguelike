@@ -71,12 +71,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 
 #
-# Main game executable
+# Main game executables
 #
 
-add_executable(game
-    src/main.cpp
+add_executable(client
+    src/app/client/client_main.cpp
 )
+
+add_executable(server
+    src/app/server/server_main.cpp
+)
+
+#
+# Link libraries
+#
 
 file(GLOB_RECURSE CORE_LIB_SOURCES CONFIGURE_DEPENDS
     src/core/*.cpp
@@ -86,16 +94,15 @@ add_library(core_lib
     ${CORE_LIB_SOURCES}
 )
 
-target_link_libraries(core_lib PRIVATE spdlog::spdlog)
+target_link_libraries(core_lib PUBLIC spdlog::spdlog)
 
 target_include_directories(core_lib
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-
-target_link_libraries(game PRIVATE SDL3::SDL3 core_lib)
-
+target_link_libraries(client PRIVATE SDL3::SDL3 core_lib)
+target_link_libraries(server PRIVATE SDL3::SDL3 core_lib)
 
 #
 # Collect all tests files
