@@ -1,0 +1,30 @@
+{
+  "C++ header skeleton": {
+    "prefix": "hh",
+    "body": [
+      "#ifndef ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "#define ${1:${TM_FILENAME_BASE/(.*)/${1:/upcase}_H/}}",
+      "",
+      "class ${2:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}} {",
+      "public:",  
+      "    ${2:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}();",
+      "    ~${2:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}();",
+      "};",
+      "",
+      "#endif",
+      ""
+    ],
+    "description": "Header boilerplate with include guard generated from filename"
+  },
+  "C++ source skeleton": {
+    "prefix": "cc",
+    "body": [
+      "#include \"${TM_FILENAME_BASE}.h\"",
+      "",
+      "${1:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}::${1:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}() = default;",
+      "${1:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}::~${1:${TM_FILENAME_BASE/(^|[^A-Za-z0-9]+)([A-Za-z0-9])/${2:/upcase}/g}}() = default;",
+      ""
+    ],
+    "description": "Source boilerplate with PascalCase class name from filename"
+  }
+}
