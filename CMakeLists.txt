@@ -66,21 +66,21 @@ add_executable(game
     src/main.cpp
 )
 
-file(GLOB_RECURSE TRANSPORT_LIB_SOURCES CONFIGURE_DEPENDS
-    src/core/transport/*.cpp
+file(GLOB_RECURSE CORE_LIB_SOURCES CONFIGURE_DEPENDS
+    src/core/*.cpp
 )
 
-add_library(transport_lib
-    ${TRANSPORT_LIB_SOURCES}
+add_library(core_lib
+    ${CORE_LIB_SOURCES}
 )
 
-target_include_directories(transport_lib
+target_include_directories(core_lib
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 
-target_link_libraries(game PRIVATE SDL3::SDL3 transport_lib)
+target_link_libraries(game PRIVATE SDL3::SDL3 core_lib)
 
 
 #
@@ -99,7 +99,7 @@ add_executable(tests
     ${TEST_SOURCES}
 )
 
-target_link_libraries(tests PRIVATE doctest transport_lib)
+target_link_libraries(tests PRIVATE doctest core_lib)
 
 #
 # Enable ctest
