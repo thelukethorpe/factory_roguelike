@@ -59,6 +59,18 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(doctest)
 
 #
+# spdlog
+#
+
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.16.0
+)
+
+FetchContent_MakeAvailable(spdlog)
+
+#
 # Main game executable
 #
 
@@ -73,6 +85,8 @@ file(GLOB_RECURSE CORE_LIB_SOURCES CONFIGURE_DEPENDS
 add_library(core_lib
     ${CORE_LIB_SOURCES}
 )
+
+target_link_libraries(core_lib PRIVATE spdlog::spdlog)
 
 target_include_directories(core_lib
     PUBLIC
