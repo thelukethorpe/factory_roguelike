@@ -38,7 +38,10 @@ class InMemoryClientTransport : public ClientTransport
 
     void tick();
 
-    [[nodiscard]] ClientConnectionId connectionId() const noexcept { return client_server_pair_.client_id; }
+    [[nodiscard]] ClientConnectionId connectionId() const noexcept
+    {
+        return client_server_pair_.client_id;
+    }
 
   private:
     const std::shared_ptr<InMemoryNetwork> network_;
