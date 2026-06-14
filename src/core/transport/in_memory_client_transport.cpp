@@ -1,7 +1,7 @@
 #include "in_memory_client_transport.h"
 #include "in_memory_network.h"
 
-InMemoryClientTransport::InMemoryClientTransport(const InMemoryClientTransportArgs &args,
+InMemoryClientTransport::InMemoryClientTransport(const Args &args,
                                                  ClientTransportCallbacks callbacks)
     : network_(args.network), client_server_pair_{.client_id = args.network->next_client_id_++,
                                                   .server_id = args.server_id},

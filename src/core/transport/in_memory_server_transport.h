@@ -7,16 +7,15 @@
 
 class InMemoryNetwork;
 
-struct InMemoryServerTransportArgs
-{
-    std::shared_ptr<InMemoryNetwork> network;
-};
-
 class InMemoryServerTransport : public ServerTransport
 {
   public:
-    InMemoryServerTransport(const InMemoryServerTransportArgs &args,
-                            ServerTransportCallbacks callbacks);
+    struct Args
+    {
+        std::shared_ptr<InMemoryNetwork> network;
+    };
+
+    InMemoryServerTransport(const Args &args, ServerTransportCallbacks callbacks);
 
     ~InMemoryServerTransport() override;
 

@@ -10,10 +10,10 @@ struct ServerConnectionManagerCallbacks
     std::function<void(ClientConnectionId client_id, double x, double y)> onClientMove;
 };
 
-template <typename TServerTransport, typename TServerTransportArgs> class ServerConnectionManager
+template <typename TServerTransport> class ServerConnectionManager
 {
   public:
-    ServerConnectionManager(const TServerTransportArgs &serverTransportArgs,
+    ServerConnectionManager(const typename TServerTransport::Args &serverTransportArgs,
                             ServerConnectionManagerCallbacks callbacks)
         : server_transport_(TServerTransport{serverTransportArgs}), callbacks_(std::move(callbacks))
     {

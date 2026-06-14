@@ -4,10 +4,10 @@
 #include <core/byte_reader.h>
 #include <core/op/server_op.h>
 
-template <typename TClientTransport, typename TClientTransportArgs> class ClientConnectionManager
+template <typename TClientTransport> class ClientConnectionManager
 {
   public:
-    ClientConnectionManager(const TClientTransportArgs &clientTransportArgs)
+    ClientConnectionManager(const typename TClientTransport::Args &clientTransportArgs)
         : client_transport_(TClientTransport{clientTransportArgs})
     {
     }

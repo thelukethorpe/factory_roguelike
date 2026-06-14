@@ -1,17 +1,15 @@
 #include "client_connection_manager.h"
 
-template <typename TClientTransport, typename TClientTransportArgs>
+template <typename TClientTransport>
 template <ServerOp Op>
-void ClientConnectionManager<TClientTransport, TClientTransportArgs>::sendServerOp(
-    const typename Op::Payload &payload)
+void ClientConnectionManager<TClientTransport>::sendServerOp(const typename Op::Payload &payload)
 {
     const auto serializedOp = serializeOp(Op::id, payload);
     client_transport_.send(serializedOp);
 }
 
-template <typename TClientTransport, typename TClientTransportArgs>
-void ClientConnectionManager<TClientTransport, TClientTransportArgs>::receiveServerOps(
-    const ServerOpCallbacks &cbs)
+template <typename TClientTransport>
+void ClientConnectionManager<TClientTransport>::receiveServerOps(const ServerOpCallbacks &cbs)
 {
     const auto data = client_transport_.receive();
     ByteReader reader(data);
@@ -21,9 +19,9 @@ void ClientConnectionManager<TClientTransport, TClientTransportArgs>::receiveSer
     }
 };
 
-template <typename TClientTransport, typename TClientTransportArgs>
-void ClientConnectionManager<TClientTransport, TClientTransportArgs>::receiveServerOp(
-    const ServerOpCallbacks &cbs, ByteReader &reader)
+template <typename TClientTransport>
+void ClientConnectionManager<TClientTransport>::receiveServerOp(const ServerOpCallbacks &cbs,
+                                                                ByteReader &reader)
 {
     const auto op = reader.read<ServerOpId>();
     switch (op)
@@ -34,10 +32,10 @@ void ClientConnectionManager<TClientTransport, TClientTransportArgs>::receiveSer
     }
 }
 
-template <typename TClientTransport, typename TClientTransportArgs>
+template <typename TClientTransport>
 template <ServerOp Op>
-void ClientConnectionManager<TClientTransport, TClientTransportArgs>::dispatchServerOp(
-    const ServerOpCallbacks &cbs, ByteReader &reader)
+void ClientConnectionManager<TClientTransport>::dispatchServerOp(const ServerOpCallbacks &cbs,
+                                                                 ByteReader &reader)
 {
     const auto payload = reader.read<typename Op::Payload>();
     Op::invoke(cbs, payload);

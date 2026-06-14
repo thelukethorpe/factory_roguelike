@@ -6,12 +6,6 @@
 
 class InMemoryNetwork;
 
-struct InMemoryClientTransportArgs
-{
-    std::shared_ptr<InMemoryNetwork> network;
-    ServerConnectionId server_id;
-};
-
 struct ClientServerPair
 {
     ClientConnectionId client_id;
@@ -21,8 +15,13 @@ struct ClientServerPair
 class InMemoryClientTransport : public ClientTransport
 {
   public:
-    InMemoryClientTransport(const InMemoryClientTransportArgs &args,
-                            ClientTransportCallbacks callbacks);
+    struct Args
+    {
+        std::shared_ptr<InMemoryNetwork> network;
+        ServerConnectionId server_id;
+    };
+
+    InMemoryClientTransport(const Args &args, ClientTransportCallbacks callbacks);
 
     ~InMemoryClientTransport() override;
 

@@ -1,7 +1,7 @@
 #include "in_memory_server_transport.h"
 #include "in_memory_network.h"
 
-InMemoryServerTransport::InMemoryServerTransport(const InMemoryServerTransportArgs &args,
+InMemoryServerTransport::InMemoryServerTransport(const Args &args,
                                                  ServerTransportCallbacks callbacks)
     : network_(args.network), connection_id_(network_->next_server_id_++),
       callbacks_(std::move(callbacks))
