@@ -2,13 +2,15 @@
 #define CLIENT_CONNECTION_MANAGER_H
 
 #include <core/byte_reader.h>
+#include <core/op/client_op.h>
 #include <core/op/server_op.h>
+#include <core/transport/transport.h>
 
 template <typename TClientTransport> class ClientConnectionManager
 {
   public:
-    ClientConnectionManager(const typename TClientTransport::Args &clientTransportArgs)
-        : client_transport_(TClientTransport{clientTransportArgs})
+    ClientConnectionManager(const typename TClientTransport::Args &client_transport_args)
+        : client_transport_(TClientTransport{client_transport_args, {}}) // TODO Callbacks
     {
     }
     ~ClientConnectionManager() = default;
@@ -19,16 +21,49 @@ template <typename TClientTransport> class ClientConnectionManager
     ClientConnectionManager(ClientConnectionManager &&) = delete;
     ClientConnectionManager &operator=(ClientConnectionManager &&) = delete;
 
-    template <ServerOp Op> void sendServerOp(const typename Op::Payload &payload);
+    [[nodiscard]] ClientConnectionId connectionId() const noexcept
+    {
+        return client_transport_.connectionId();
+    }
 
-    void receiveServerOps(const ServerOpCallbacks &cbs);
+    void tick() { client_transport_.tick(); }
+
+    template <ClientOp Op> void sendClientOpToServer(const typename Op::Payload &payload)
+    {
+        const auto serializedOp = serializeOp(Op::id, payload);
+        client_transport_.send(serializedOp);
+    }
+
+    void receiveOpsFromServer(const ServerOpCallbacks &cbs)
+    {
+        const auto data = client_transport_.receive();
+        ByteReader reader(data);
+        while (!reader.empty())
+        {
+            this->receiveOpFromServer(cbs, reader);
+        }
+    }
 
   private:
     TClientTransport client_transport_;
 
-    void receiveServerOp(const ServerOpCallbacks &cbs, ByteReader &reader);
+    void receiveOpFromServer(const ServerOpCallbacks &cbs, ByteReader &reader)
+    {
+        const auto op = reader.read<ServerOpId>();
+        switch (op)
+        {
+        case ServerOpId::SpawnEntity:
+            this->dispatchOpFromServer<ServerSpawnEntityOp>(cbs, reader);
+            break;
+        }
+    }
 
-    template <ServerOp Op> void dispatchServerOp(const ServerOpCallbacks &cbs, ByteReader &reader);
+    template <ServerOp Op>
+    void dispatchOpFromServer(const ServerOpCallbacks &cbs, ByteReader &reader)
+    {
+        const auto payload = reader.read<typename Op::Payload>();
+        Op::invoke(cbs, payload);
+    }
 };
 
 #endif

@@ -71,7 +71,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 
 #
-# Main game executables
+# Executables
 #
 
 add_executable(client
@@ -83,7 +83,7 @@ add_executable(server
 )
 
 #
-# Link libraries
+# Core library
 #
 
 file(GLOB_RECURSE CORE_LIB_SOURCES CONFIGURE_DEPENDS
@@ -101,8 +101,71 @@ target_include_directories(core_lib
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(client PRIVATE SDL3::SDL3 core_lib)
-target_link_libraries(server PRIVATE SDL3::SDL3 core_lib)
+#
+# Client library (header-only)
+#
+add_library(client_lib INTERFACE)
+
+target_link_libraries(client_lib
+    INTERFACE
+        core_lib
+)
+
+target_include_directories(client_lib
+    INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+#
+# Server library (header-only)
+#
+add_library(server_lib INTERFACE)
+
+target_link_libraries(server_lib
+    INTERFACE
+        core_lib
+)
+
+target_include_directories(server_lib
+    INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+#
+# Client app
+#
+
+file(GLOB_RECURSE CLIENT_APP_SOURCES CONFIGURE_DEPENDS
+    src/app/client/*.cpp
+)
+
+add_library(client_app
+    ${CLIENT_APP_SOURCES}
+)
+
+target_link_libraries(client_app PUBLIC client_lib)
+
+
+#
+# Server app
+#
+
+file(GLOB_RECURSE SERVER_APP_SOURCES CONFIGURE_DEPENDS
+    src/app/server/*.cpp
+)
+
+add_library(server_app
+    ${SERVER_APP_SOURCES}
+)
+
+target_link_libraries(server_app PUBLIC server_lib)
+
+#
+# Link libraries to executables
+#
+
+target_link_libraries(client PRIVATE SDL3::SDL3 client_app)
+target_link_libraries(server PRIVATE server_app)
 
 #
 # Collect all tests files

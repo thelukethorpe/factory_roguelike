@@ -3,6 +3,7 @@
 
 #include <core/byte_reader.h>
 #include <core/op/client_op.h>
+#include <core/op/server_op.h>
 #include <core/transport/transport.h>
 
 struct ServerConnectionManagerCallbacks
@@ -13,9 +14,8 @@ struct ServerConnectionManagerCallbacks
 template <typename TServerTransport> class ServerConnectionManager
 {
   public:
-    ServerConnectionManager(const typename TServerTransport::Args &serverTransportArgs,
-                            ServerConnectionManagerCallbacks callbacks)
-        : server_transport_(TServerTransport{serverTransportArgs}), callbacks_(std::move(callbacks))
+    ServerConnectionManager(const typename TServerTransport::Args &server_transport_args)
+        : server_transport_(TServerTransport{server_transport_args, {}}) // TODO Callbacks
     {
     }
     ~ServerConnectionManager() = default;
@@ -26,18 +26,50 @@ template <typename TServerTransport> class ServerConnectionManager
     ServerConnectionManager(ServerConnectionManager &&) = delete;
     ServerConnectionManager &operator=(ServerConnectionManager &&) = delete;
 
-    template <ClientOp Op>
-    void sendClientOp(ClientConnectionId client_id, const typename Op::Payload &payload);
+    [[nodiscard]] ServerConnectionId connectionId() const noexcept
+    {
+        return server_transport_.connectionId();
+    }
 
-    void receiveClientOps(ClientConnectionId client_id, const ClientOpCallbacks &cbs);
+    void tick() { server_transport_.tick(); }
+
+    template <ServerOp Op>
+    void sendServerOpToClient(ClientConnectionId client_id, const typename Op::Payload &payload)
+    {
+        const auto serializedOp = serializeOp(Op::id, payload);
+        server_transport_.send(client_id, serializedOp);
+    }
+
+    void receiveOpsFromClient(ClientConnectionId client_id, const ClientOpCallbacks &cbs)
+    {
+        const auto data = server_transport_.receive(client_id);
+        ByteReader reader(data);
+        while (!reader.empty())
+        {
+            this->receiveOpFromClient(reader, cbs);
+        }
+    }
 
   private:
     TServerTransport server_transport_;
-    ServerConnectionManagerCallbacks callbacks_;
 
-    void receiveClientOp(ByteReader &reader, const ClientOpCallbacks &cbs);
+    void receiveOpFromClient(ByteReader &reader, const ClientOpCallbacks &cbs)
+    {
+        const auto op = reader.read<ClientOpId>();
+        switch (op)
+        {
+        case ClientOpId::Move:
+            this->dispatchOpFromClient<ClientMoveOp>(reader, cbs);
+            break;
+        }
+    }
 
-    template <typename Op> void dispatchClientOp(ByteReader &reader, const ClientOpCallbacks &cbs);
+    template <ClientOp Op>
+    void dispatchOpFromClient(ByteReader &reader, const ClientOpCallbacks &cbs)
+    {
+        const auto payload = reader.read<typename Op::Payload>();
+        Op::invoke(cbs, payload);
+    }
 };
 
 #endif
