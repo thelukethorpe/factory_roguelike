@@ -143,7 +143,7 @@ add_library(client_app
     ${CLIENT_APP_SOURCES}
 )
 
-target_link_libraries(client_app PUBLIC client_lib)
+target_link_libraries(client_app PUBLIC client_lib SDL3::SDL3)
 
 
 #
@@ -164,7 +164,7 @@ target_link_libraries(server_app PUBLIC server_lib)
 # Link libraries to executables
 #
 
-target_link_libraries(client PRIVATE SDL3::SDL3 client_app)
+target_link_libraries(client PRIVATE client_app)
 target_link_libraries(server PRIVATE server_app)
 
 #
