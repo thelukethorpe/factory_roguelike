@@ -2,7 +2,7 @@
 #define SERVER_OP_H
 
 #include "op.h"
-#include <core/entity.h>
+#include <core/game/entity.h>
 #include <functional>
 
 enum ServerOpId : OpId

@@ -1,10 +1,10 @@
 #ifndef CLIENT_CONNECTION_MANAGER_H
 #define CLIENT_CONNECTION_MANAGER_H
 
-#include <core/byte_reader.h>
 #include <core/op/client_op.h>
 #include <core/op/server_op.h>
 #include <core/transport/transport.h>
+#include <core/util/byte_reader.h>
 
 template <typename TClientTransport> class ClientConnectionManager
 {

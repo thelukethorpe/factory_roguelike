@@ -1,10 +1,10 @@
 #ifndef SERVER_CONNECTION_MANAGER_H
 #define SERVER_CONNECTION_MANAGER_H
 
-#include <core/byte_reader.h>
 #include <core/op/client_op.h>
 #include <core/op/server_op.h>
 #include <core/transport/transport.h>
+#include <core/util/byte_reader.h>
 
 struct ServerConnectionManagerCallbacks
 {
