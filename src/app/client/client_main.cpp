@@ -1,21 +1,19 @@
 #include "client_app.h"
-#include "single_player_session.h"
 #include <core/util/log.h>
 #include <core/util/time.h>
 
-#define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
+#define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-/* We will use this renderer to draw into this window every frame. */
-// static SDL_Window *window = NULL;
-// static SDL_Renderer *renderer = NULL;
-// static SDL_Texture *texture = NULL;
+static SDL_Window *window = nullptr;
+static SDL_Renderer *renderer = nullptr;
+// static SDL_Texture *texture = nullptr;
 // static int texture_width = 0;
 // static int texture_height = 0;
 
-// #define WINDOW_WIDTH 640
-// #define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -31,22 +29,24 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     // SDL_Surface *surface = NULL;
     // char *png_path = NULL;
 
-    // SDL_SetAppMetadata("Example Renderer Textures", "1.0", "com.example.renderer-textures");
+    SDL_SetAppMetadata("Example Renderer Textures", "1.0", "com.example.renderer-textures");
 
-    // if (!SDL_Init(SDL_INIT_VIDEO))
-    // {
-    //     SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
-    //     return SDL_APP_FAILURE;
-    // }
+    // TODO SDL logs?
 
-    // if (!SDL_CreateWindowAndRenderer("examples/renderer/textures", WINDOW_WIDTH, WINDOW_HEIGHT,
-    //                                  SDL_WINDOW_RESIZABLE, &window, &renderer))
-    // {
-    //     SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
-    //     return SDL_APP_FAILURE;
-    // }
-    // SDL_SetRenderLogicalPresentation(renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
-    //                                  SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    if (!SDL_Init(SDL_INIT_VIDEO))
+    {
+        SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    if (!SDL_CreateWindowAndRenderer("examples/renderer/textures", WINDOW_WIDTH, WINDOW_HEIGHT,
+                                     SDL_WINDOW_RESIZABLE, &window, &renderer))
+    {
+        SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+    SDL_SetRenderLogicalPresentation(renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
     // /* Textures are pixel data that we upload to the video hardware for fast drawing. Lots of 2D
     //    engines refer to these as "sprites." We'll do a static texture (upload once, draw many
@@ -95,6 +95,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     auto *client_app = static_cast<ClientApp *>(appstate);
+    auto view = client_app->view();
 
     //     SDL_FRect dst_rect;
     //     const Uint64 now = SDL_GetTicks();
@@ -104,9 +105,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     //     const float scale = ((float)(((int)(now % 1000)) - 500) / 500.0f) * direction;
 
     //     /* as you can see from this, rendering draws over whatever was drawn before it. */
-    //     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); /* black, full alpha */
-    //     SDL_RenderClear(renderer);                                   /* start with a blank
-    //     canvas. */
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); /* black, full alpha */
+    SDL_RenderClear(renderer);                                   /* start with a blank
+//     canvas. */
 
     //     /* Just draw the static texture a few times. You can think of it like a
     //        stamp, there isn't a limit to the number of times you can draw with it. */
@@ -132,7 +133,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     //     dst_rect.h = (float)texture_height;
     //     SDL_RenderTexture(renderer, texture, NULL, &dst_rect);
 
-    //     SDL_RenderPresent(renderer); /* put it all on the screen! */
+    SDL_RenderPresent(renderer);
 
     return SDL_APP_CONTINUE; /* carry on with the program! */
 }
@@ -149,7 +150,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
 
     auto *client_app = static_cast<ClientApp *>(appstate);
     SDL_free(client_app);
-    /* SDL will clean up the window/renderer for us. */
 }
 
 // int main()
