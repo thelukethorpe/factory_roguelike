@@ -96,7 +96,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     auto &input_event_adapter = client_app_state->input_event_adapter;
 
     // TODO method name
-    input_event_adapter.adapt(*event, client_app);
+    input_event_adapter.adapt<ClientApp>(*event, client_app);
 
     if (event->type == SDL_EVENT_QUIT)
     {

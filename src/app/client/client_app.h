@@ -1,12 +1,12 @@
 #ifndef CLIENT_APP_H
 #define CLIENT_APP_H
 
+#include "single_player_session.h"
+
 class ClientApp
 {
   public:
-    struct View
-    {
-    };
+    using View = SinglePlayerSession::View;
 
     ClientApp() = default;
     ~ClientApp() = default;
@@ -15,9 +15,18 @@ class ClientApp
     ClientApp &operator=(const ClientApp &) = delete;
     ClientApp &operator=(ClientApp &&) = delete;
 
-    [[nodiscard]] View view() const;
+    [[nodiscard]] View view() const { return single_player_session_.view(); }
 
-    template <typename InputEvent> void input(const typename InputEvent::Args &args);
+    template <typename InputEvent> void input(const typename InputEvent::Args &args)
+    {
+        single_player_session_.input<InputEvent>(args);
+    }
+
+  private:
+    SinglePlayerSession single_player_session_{
+        SinglePlayerSession::Args{.loadout = Loadout{.id = LoadoutId::Warper, .speed = 0.1}}};
+
+    void tick(milliseconds_t dt) { single_player_session_.tick(dt); }
 };
 
 #endif

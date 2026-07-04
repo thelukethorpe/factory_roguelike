@@ -18,6 +18,10 @@ template <typename TClientTransport> class GameClient
         Loadout loadout;
     };
 
+    struct View
+    {
+    };
+
     GameClient(const Args &args)
         : client_connection_manager_(args.client_transport_args), loadout_(args.loadout)
     {
@@ -47,6 +51,8 @@ template <typename TClientTransport> class GameClient
         client_connection_manager_.tick();
     }
 
+    View view() const;
+
     template <typename InputEvent> void input(const typename InputEvent::Args &args)
     {
         switch (InputEvent::type)
@@ -65,8 +71,6 @@ template <typename TClientTransport> class GameClient
             break;
         }
     }
-
-    void viewScene() const;
 
   private:
     ClientConnectionManager<TClientTransport> client_connection_manager_;

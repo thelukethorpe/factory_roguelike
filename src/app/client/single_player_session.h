@@ -8,6 +8,9 @@
 #include <core/util/time.h>
 #include <server/game_server.h>
 
+using SinglePlayerGameServer = GameServer<InMemoryServerTransport>;
+using SinglePlayerGameClient = GameClient<InMemoryClientTransport>;
+
 class SinglePlayerSession
 {
   public:
@@ -15,6 +18,8 @@ class SinglePlayerSession
     {
         Loadout loadout;
     };
+
+    using View = SinglePlayerGameClient::View;
 
     SinglePlayerSession(const Args &args);
     ~SinglePlayerSession() = default;
@@ -27,10 +32,17 @@ class SinglePlayerSession
 
     void tick(milliseconds_t dt);
 
+    [[nodiscard]] View view() const { return game_client_.view(); }
+
+    template <typename InputEvent> void input(const typename InputEvent::Args &args)
+    {
+        game_client_.input<InputEvent>(args);
+    }
+
   private:
     std::shared_ptr<InMemoryNetwork> network_;
-    GameServer<InMemoryServerTransport> game_server_;
-    GameClient<InMemoryClientTransport> game_client_;
+    SinglePlayerGameServer game_server_;
+    SinglePlayerGameClient game_client_;
 
     static void onClientMove(const ClientMoveOpPayload &payload)
     {
