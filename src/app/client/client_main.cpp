@@ -18,8 +18,8 @@ static SDL_Renderer *renderer = nullptr;
 
 struct ClientAppState
 {
-    ClientApp client_app;
     SDLInputEventAdapter input_event_adapter;
+    ClientApp client_app;
 };
 
 /* This function runs once at startup. */
@@ -92,8 +92,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
     auto *client_app_state = static_cast<ClientAppState *>(appstate);
-    auto &client_app = client_app_state->client_app;
     auto &input_event_adapter = client_app_state->input_event_adapter;
+    auto &client_app = client_app_state->client_app;
 
     // TODO method name
     input_event_adapter.adapt<ClientApp>(*event, client_app);
