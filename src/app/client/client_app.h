@@ -16,6 +16,8 @@ class ClientApp
     ClientApp &operator=(ClientApp &&) = delete;
 
     [[nodiscard]] View view() const;
+
+    template <typename InputEvent> void input(const typename InputEvent::Args &args);
 };
 
 #endif

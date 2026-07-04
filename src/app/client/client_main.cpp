@@ -1,3 +1,4 @@
+#include "SDL_input_event_adapter.h"
 #include "client_app.h"
 #include <core/util/log.h>
 #include <core/util/time.h>
@@ -15,16 +16,22 @@ static SDL_Renderer *renderer = nullptr;
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
+struct ClientAppState
+{
+    ClientApp client_app;
+    SDLInputEventAdapter input_event_adapter;
+};
+
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    auto *client_app = static_cast<ClientApp *>(SDL_calloc(1, sizeof(ClientApp)));
-    if (client_app == nullptr)
+    auto *client_app_state = static_cast<ClientAppState *>(SDL_calloc(1, sizeof(ClientAppState)));
+    if (client_app_state == nullptr)
     {
         return SDL_APP_FAILURE;
     }
 
-    *appstate = client_app;
+    *appstate = client_app_state;
 
     // SDL_Surface *surface = NULL;
     // char *png_path = NULL;
@@ -84,6 +91,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 /* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
+    auto *client_app_state = static_cast<ClientAppState *>(appstate);
+    auto &client_app = client_app_state->client_app;
+    auto &input_event_adapter = client_app_state->input_event_adapter;
+
+    // TODO method name
+    input_event_adapter.adapt(*event, client_app);
+
     if (event->type == SDL_EVENT_QUIT)
     {
         return SDL_APP_SUCCESS; /* end the program, reporting success to the OS. */
@@ -94,8 +108,9 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    auto *client_app = static_cast<ClientApp *>(appstate);
-    auto view = client_app->view();
+    auto *client_app_state = static_cast<ClientAppState *>(appstate);
+    auto &client_app = client_app_state->client_app;
+    auto view = client_app.view();
 
     //     SDL_FRect dst_rect;
     //     const Uint64 now = SDL_GetTicks();
@@ -148,8 +163,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
         return;
     }
 
-    auto *client_app = static_cast<ClientApp *>(appstate);
-    SDL_free(client_app);
+    auto *client_app_state = static_cast<ClientAppState *>(appstate);
+    SDL_free(client_app_state);
 }
 
 // int main()

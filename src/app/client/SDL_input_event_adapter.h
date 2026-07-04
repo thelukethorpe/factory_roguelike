@@ -27,6 +27,8 @@ class SDLInputEventAdapter
         case SDL_EVENT_KEY_UP:
             this->onKeyEvent(sdl_event.key.key, false, handler);
             break;
+        default:
+            break;
         }
     }
 
