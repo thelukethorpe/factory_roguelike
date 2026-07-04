@@ -112,6 +112,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     auto &client_app = client_app_state->client_app;
     auto view = client_app.view();
 
+    // TODO logic tick should happen in separate thread - 2 view buffers should be maintained, and
+    // the view buffer should be swapped after the logic tick is complete. The rendering thread
+    // should always render the current view buffer, and the logic thread should always update the
+    // next view buffer. Each ECS comp should have a "tick" and an "updateView" / "view" method
+    // Either that, or there is an ECS comp that runs last that updates the view buffer
+
     //     SDL_FRect dst_rect;
     //     const Uint64 now = SDL_GetTicks();
 
