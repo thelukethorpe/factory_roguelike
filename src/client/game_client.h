@@ -51,29 +51,17 @@ template <typename TClientTransport> class GameClient
     {
         switch (InputEvent::type)
         {
-        case InputEventType::MoveNorthKeyUp:
-            is_moving_in_cardinal_direction_[CardinalDirection::North] = false;
+        case InputEventType::MoveNorthKey:
+            is_moving_in_cardinal_direction_[CardinalDirection::North] = args.is_key_down;
             break;
-        case InputEventType::MoveNorthKeyDown:
-            is_moving_in_cardinal_direction_[CardinalDirection::North] = true;
+        case InputEventType::MoveEastKey:
+            is_moving_in_cardinal_direction_[CardinalDirection::East] = args.is_key_down;
             break;
-        case InputEventType::MoveEastKeyUp:
-            is_moving_in_cardinal_direction_[CardinalDirection::East] = false;
+        case InputEventType::MoveSouthKey:
+            is_moving_in_cardinal_direction_[CardinalDirection::South] = args.is_key_down;
             break;
-        case InputEventType::MoveEastKeyDown:
-            is_moving_in_cardinal_direction_[CardinalDirection::East] = true;
-            break;
-        case InputEventType::MoveSouthKeyUp:
-            is_moving_in_cardinal_direction_[CardinalDirection::South] = false;
-            break;
-        case InputEventType::MoveSouthKeyDown:
-            is_moving_in_cardinal_direction_[CardinalDirection::South] = true;
-            break;
-        case InputEventType::MoveWestKeyUp:
-            is_moving_in_cardinal_direction_[CardinalDirection::West] = false;
-            break;
-        case InputEventType::MoveWestKeyDown:
-            is_moving_in_cardinal_direction_[CardinalDirection::West] = true;
+        case InputEventType::MoveWestKey:
+            is_moving_in_cardinal_direction_[CardinalDirection::West] = args.is_key_down;
             break;
         }
     }

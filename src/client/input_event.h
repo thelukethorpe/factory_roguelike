@@ -5,32 +5,21 @@
 
 enum InputEventType : std::uint8_t
 {
-    MoveNorthKeyUp,
-    MoveNorthKeyDown,
-    MoveEastKeyUp,
-    MoveEastKeyDown,
-    MoveSouthKeyUp,
-    MoveSouthKeyDown,
-    MoveWestKeyUp,
-    MoveWestKeyDown,
+    MoveNorthKey,
+    MoveEastKey,
+    MoveSouthKey,
+    MoveWestKey,
 };
 
-struct MoveNorthKeyUpEvent
+struct KeyEvent
 {
-    static constexpr InputEventType type = InputEventType::MoveNorthKeyUp;
-
     struct Args
     {
+        bool is_key_down;
     };
-};
 
-struct MoveNorthKeyDownEvent
-{
-    static constexpr InputEventType type = InputEventType::MoveNorthKeyDown;
-
-    struct Args
-    {
-    };
+    InputEventType type;
+    Args args;
 };
 
 #endif
