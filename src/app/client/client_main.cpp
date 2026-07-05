@@ -10,8 +10,6 @@
 
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
-// static int texture_width = 0;
-// static int texture_height = 0;
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -27,8 +25,6 @@ struct ClientAppState
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     SDL_SetAppMetadata("Example Renderer Textures", "1.0", "com.example.renderer-textures");
-
-    // TODO SDL logs?
 
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
@@ -58,10 +54,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     *appstate = client_app_state;
 
-    return SDL_APP_CONTINUE; /* carry on with the program! */
+    return SDL_APP_CONTINUE;
 }
 
-/* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
     auto *client_app_state = static_cast<ClientAppState *>(appstate);
@@ -73,12 +68,11 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
     if (event->type == SDL_EVENT_QUIT)
     {
-        return SDL_APP_SUCCESS; /* end the program, reporting success to the OS. */
+        return SDL_APP_SUCCESS;
     }
-    return SDL_APP_CONTINUE; /* carry on with the program! */
+    return SDL_APP_CONTINUE;
 }
 
-/* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     auto *client_app_state = static_cast<ClientAppState *>(appstate);
@@ -111,11 +105,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     return SDL_APP_CONTINUE; /* carry on with the program! */
 }
 
-/* This function runs once at shutdown. */
 void SDL_AppQuit(void *appstate, SDL_AppResult result)
 {
-    // SDL_DestroyTexture(texture);
-
     if (appstate == nullptr)
     {
         return;
