@@ -3,6 +3,8 @@
 SDLAssetRegistrar::SDLAssetRegistrar(SDL_Renderer *renderer)
     : renderer_(renderer), player_textures_{}
 {
+    // TODO we don't want to bake file locations into the SDL registrar - that metadata should lie
+    // elsewhere
     // TODO quite lazy, will need smth better than this
     player_textures_[LoadoutId::Warper] = loadTextureFromFile("player/warper");
 }
