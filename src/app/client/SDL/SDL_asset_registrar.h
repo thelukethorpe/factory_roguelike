@@ -18,7 +18,7 @@ class SDLAssetRegistrar
     };
 
     SDLAssetRegistrar(SDL_Renderer *renderer);
-    ~SDLAssetRegistrar() = default; // TODO free textures in destructor
+    ~SDLAssetRegistrar() = default; // TODO free textures in destructor SDL_DestroyTexture
     SDLAssetRegistrar(const SDLAssetRegistrar &) = delete;
     SDLAssetRegistrar(SDLAssetRegistrar &&) = delete;
     SDLAssetRegistrar &operator=(const SDLAssetRegistrar &) = delete;
