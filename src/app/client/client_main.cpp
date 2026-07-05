@@ -1,4 +1,4 @@
-#include "SDL_input_event_adapter.h"
+#include "SDL/SDL_input_event_adapter.h"
 #include "client_app.h"
 #include <core/util/log.h>
 #include <core/util/time.h>
@@ -25,11 +25,13 @@ struct ClientAppState
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    auto *client_app_state = static_cast<ClientAppState *>(SDL_calloc(1, sizeof(ClientAppState)));
-    if (client_app_state == nullptr)
+    auto *mem = SDL_calloc(1, sizeof(ClientAppState));
+    if (mem == nullptr)
     {
         return SDL_APP_FAILURE;
     }
+
+    auto *client_app_state = new (mem) ClientAppState{};
 
     *appstate = client_app_state;
 
@@ -170,6 +172,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     }
 
     auto *client_app_state = static_cast<ClientAppState *>(appstate);
+    client_app_state->~ClientAppState();
     SDL_free(client_app_state);
 }
 
