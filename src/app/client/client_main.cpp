@@ -1,3 +1,4 @@
+#include "SDL/SDL_asset_registrar.h"
 #include "SDL/SDL_input_event_adapter.h"
 #include "client_app.h"
 #include <core/util/log.h>
@@ -9,7 +10,6 @@
 
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
-// static SDL_Texture *texture = nullptr;
 // static int texture_width = 0;
 // static int texture_height = 0;
 
@@ -18,6 +18,7 @@ static SDL_Renderer *renderer = nullptr;
 
 struct ClientAppState
 {
+    SDLAssetRegistrar asset_registrar;
     SDLInputEventAdapter input_event_adapter;
     ClientApp client_app;
 };
@@ -25,19 +26,6 @@ struct ClientAppState
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    auto *mem = SDL_calloc(1, sizeof(ClientAppState));
-    if (mem == nullptr)
-    {
-        return SDL_APP_FAILURE;
-    }
-
-    auto *client_app_state = new (mem) ClientAppState{};
-
-    *appstate = client_app_state;
-
-    // SDL_Surface *surface = NULL;
-    // char *png_path = NULL;
-
     SDL_SetAppMetadata("Example Renderer Textures", "1.0", "com.example.renderer-textures");
 
     // TODO SDL logs?
@@ -57,35 +45,18 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_SetRenderLogicalPresentation(renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
                                      SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-    // /* Textures are pixel data that we upload to the video hardware for fast drawing. Lots of 2D
-    //    engines refer to these as "sprites." We'll do a static texture (upload once, draw many
-    //    times) with data from a png file. */
+    auto *mem = SDL_calloc(1, sizeof(ClientAppState));
+    if (mem == nullptr)
+    {
+        return SDL_APP_FAILURE;
+    }
 
-    // /* SDL_Surface is pixel data the CPU can access. SDL_Texture is pixel data the GPU can
-    // access.
-    //    Load a .png into a surface, move it to a texture from there. */
-    // SDL_asprintf(&png_path, "%ssample.png",
-    //              SDL_GetBasePath()); /* allocate a string of the full file path */
-    // surface = SDL_LoadPNG(png_path);
-    // if (!surface)
-    // {
-    //     SDL_Log("Couldn't load png: %s", SDL_GetError());
-    //     return SDL_APP_FAILURE;
-    // }
+    auto *client_app_state =
+        new (mem) ClientAppState{.asset_registrar = SDLAssetRegistrar{renderer},
+                                 .input_event_adapter = SDLInputEventAdapter{},
+                                 .client_app = ClientApp{}};
 
-    // SDL_free(png_path); /* done with this, the file is loaded. */
-
-    // texture_width = surface->w;
-    // texture_height = surface->h;
-
-    // texture = SDL_CreateTextureFromSurface(renderer, surface);
-    // if (!texture)
-    // {
-    //     SDL_Log("Couldn't create static texture: %s", SDL_GetError());
-    //     return SDL_APP_FAILURE;
-    // }
-
-    // SDL_DestroySurface(surface); /* done with this, the texture has a copy of the pixels now. */
+    *appstate = client_app_state;
 
     return SDL_APP_CONTINUE; /* carry on with the program! */
 }

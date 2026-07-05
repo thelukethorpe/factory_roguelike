@@ -7,6 +7,7 @@ using EntityId = std::uint32_t;
 
 enum EntityType : std::uint8_t
 {
+    Player,
     Monster,
 };
 
