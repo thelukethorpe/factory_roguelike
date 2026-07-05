@@ -82,7 +82,9 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     auto *client_app_state = static_cast<ClientAppState *>(appstate);
+    auto &asset_registrar = client_app_state->asset_registrar;
     auto &client_app = client_app_state->client_app;
+
     auto view = client_app.view();
 
     // TODO logic tick should happen in separate thread - 2 view buffers should be maintained, and
@@ -91,41 +93,18 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     // next view buffer. Each ECS comp should have a "tick" and an "updateView" / "view" method
     // Either that, or there is an ECS comp that runs last that updates the view buffer
 
-    //     SDL_FRect dst_rect;
-    //     const Uint64 now = SDL_GetTicks();
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
 
-    //     /* we'll have some textures move around over a few seconds. */
-    //     const float direction = ((now % 2000) >= 1000) ? 1.0f : -1.0f;
-    //     const float scale = ((float)(((int)(now % 1000)) - 500) / 500.0f) * direction;
+    SDL_FRect dst_rect;
 
-    //     /* as you can see from this, rendering draws over whatever was drawn before it. */
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); /* black, full alpha */
-    SDL_RenderClear(renderer);                                   /* start with a blank
-//     canvas. */
-
-    //     /* Just draw the static texture a few times. You can think of it like a
-    //        stamp, there isn't a limit to the number of times you can draw with it. */
-
-    //     /* top left */
-    //     dst_rect.x = (100.0f * scale);
-    //     dst_rect.y = 0.0f;
-    //     dst_rect.w = (float)texture_width;
-    //     dst_rect.h = (float)texture_height;
-    //     SDL_RenderTexture(renderer, texture, NULL, &dst_rect);
-
-    //     /* center this one. */
-    //     dst_rect.x = ((float)(WINDOW_WIDTH - texture_width)) / 2.0f;
-    //     dst_rect.y = ((float)(WINDOW_HEIGHT - texture_height)) / 2.0f;
-    //     dst_rect.w = (float)texture_width;
-    //     dst_rect.h = (float)texture_height;
-    //     SDL_RenderTexture(renderer, texture, NULL, &dst_rect);
-
-    //     /* bottom right. */
-    //     dst_rect.x = ((float)(WINDOW_WIDTH - texture_width)) - (100.0f * scale);
-    //     dst_rect.y = (float)(WINDOW_HEIGHT - texture_height);
-    //     dst_rect.w = (float)texture_width;
-    //     dst_rect.h = (float)texture_height;
-    //     SDL_RenderTexture(renderer, texture, NULL, &dst_rect);
+    // TODO loop over view
+    const auto asset = asset_registrar.getPlayerTexture(LoadoutId::Warper);
+    // dst_rect.x = static_cast<float>(view.player_x);
+    // dst_rect.y = static_cast<float>(view.player_y);
+    dst_rect.w = static_cast<float>(asset.width);
+    dst_rect.h = static_cast<float>(asset.height);
+    SDL_RenderTexture(renderer, asset.sdl_texture, nullptr, &dst_rect);
 
     SDL_RenderPresent(renderer);
 
