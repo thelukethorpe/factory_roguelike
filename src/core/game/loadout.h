@@ -5,7 +5,8 @@
 
 enum LoadoutId : std::uint8_t
 {
-    Warper
+    Warper,
+    NumLoadouts
 };
 
 struct Loadout
