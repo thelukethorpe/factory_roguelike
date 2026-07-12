@@ -53,21 +53,22 @@ template <typename TClientTransport> class GameClient
 
     View view() const;
 
-    template <typename InputEvent> void input(const typename InputEvent::Args &args)
+    void input(const KeyEvent &key_event)
     {
-        switch (InputEvent::type)
+        const auto is_key_down = key_event.args.is_key_down;
+        switch (key_event.type)
         {
         case InputEventType::MoveNorthKey:
-            is_moving_in_cardinal_direction_[CardinalDirection::North] = args.is_key_down;
+            is_moving_in_cardinal_direction_[CardinalDirection::North] = is_key_down;
             break;
         case InputEventType::MoveEastKey:
-            is_moving_in_cardinal_direction_[CardinalDirection::East] = args.is_key_down;
+            is_moving_in_cardinal_direction_[CardinalDirection::East] = is_key_down;
             break;
         case InputEventType::MoveSouthKey:
-            is_moving_in_cardinal_direction_[CardinalDirection::South] = args.is_key_down;
+            is_moving_in_cardinal_direction_[CardinalDirection::South] = is_key_down;
             break;
         case InputEventType::MoveWestKey:
-            is_moving_in_cardinal_direction_[CardinalDirection::West] = args.is_key_down;
+            is_moving_in_cardinal_direction_[CardinalDirection::West] = is_key_down;
             break;
         }
     }

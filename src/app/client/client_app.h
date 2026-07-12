@@ -17,9 +17,9 @@ class ClientApp
 
     [[nodiscard]] View view() const { return single_player_session_.view(); }
 
-    template <typename InputEvent> void input(const typename InputEvent::Args &args)
+    template <typename InputEvent> void input(const InputEvent &event)
     {
-        single_player_session_.input<InputEvent>(args);
+        single_player_session_.input<InputEvent>(event);
     }
 
   private:

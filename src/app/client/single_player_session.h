@@ -34,9 +34,9 @@ class SinglePlayerSession
 
     [[nodiscard]] View view() const { return game_client_.view(); }
 
-    template <typename InputEvent> void input(const typename InputEvent::Args &args)
+    template <typename InputEvent> void input(const InputEvent &event)
     {
-        game_client_.input<InputEvent>(args);
+        game_client_.input(event);
     }
 
   private:

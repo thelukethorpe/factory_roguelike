@@ -17,15 +17,15 @@ class SDLInputEventAdapter
     SDLInputEventAdapter &operator=(SDLInputEventAdapter &&) = delete;
 
     template <typename InputEventHandler>
-    void adapt(const SDL_Event &sdl_event, const InputEventHandler &handler)
+    void adapt(const SDL_Event &sdl_event, InputEventHandler &handler)
     {
         switch (sdl_event.type)
         {
         case SDL_EVENT_KEY_DOWN:
-            this->onKeyEvent(sdl_event.key.key, true, handler);
+            this->onKeyEvent<InputEventHandler>(sdl_event.key.key, true, handler);
             break;
         case SDL_EVENT_KEY_UP:
-            this->onKeyEvent(sdl_event.key.key, false, handler);
+            this->onKeyEvent<InputEventHandler>(sdl_event.key.key, false, handler);
             break;
         default:
             break;
@@ -41,7 +41,7 @@ class SDLInputEventAdapter
     };
 
     template <typename InputEventHandler>
-    void onKeyEvent(SDL_Keycode key, bool is_key_down, const InputEventHandler &handler)
+    void onKeyEvent(SDL_Keycode key, bool is_key_down, InputEventHandler &handler)
     {
         auto it = keycode_to_input_event_type_.find(key);
         if (it == keycode_to_input_event_type_.end())
