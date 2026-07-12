@@ -10,6 +10,7 @@
 
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
+static milliseconds_t previous_now = now();
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -87,18 +88,28 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     // next view buffer. Each ECS comp should have a "tick" and an "updateView" / "view" method
     // Either that, or there is an ECS comp that runs last that updates the view buffer
 
+    // TODO this is a hack - refer to the above
+    const auto current_now = now();
+    const auto dt = current_now - previous_now;
+    client_app.tick(dt);
+    previous_now = current_now;
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
     SDL_FRect dst_rect;
 
-    // TODO loop over view
-    const auto asset = asset_registrar.getPlayerTexture(LoadoutId::Warper);
-    // dst_rect.x = static_cast<float>(view.player_x);
-    // dst_rect.y = static_cast<float>(view.player_y);
-    dst_rect.w = static_cast<float>(asset.width);
-    dst_rect.h = static_cast<float>(asset.height);
-    SDL_RenderTexture(renderer, asset.sdl_texture, nullptr, &dst_rect);
+    for (const auto &player : view.players)
+    {
+        // LOG_INFO("Rendering player: loadout_id={}, x={}, y={}",
+        //          static_cast<std::uint32_t>(player.loadout_id), player.x, player.y);
+        const auto asset = asset_registrar.getPlayerTexture(player.loadout_id);
+        dst_rect.x = static_cast<float>(player.x);
+        dst_rect.y = static_cast<float>(player.y);
+        dst_rect.w = static_cast<float>(asset.width);
+        dst_rect.h = static_cast<float>(asset.height);
+        SDL_RenderTexture(renderer, asset.sdl_texture, nullptr, &dst_rect);
+    }
 
     SDL_RenderPresent(renderer);
 

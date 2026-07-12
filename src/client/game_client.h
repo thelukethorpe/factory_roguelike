@@ -18,8 +18,17 @@ template <typename TClientTransport> class GameClient
         Loadout loadout;
     };
 
+    struct PlayerView
+    {
+        LoadoutId loadout_id;
+        double x;
+        double y;
+    };
+
     struct View
     {
+        // TODO optimize cache perf
+        std::vector<PlayerView> players;
     };
 
     GameClient(const Args &args)
@@ -54,7 +63,16 @@ template <typename TClientTransport> class GameClient
     View view() const
     {
         // TODO
-        return {};
+        return {
+            .players =
+                {
+                    PlayerView{
+                        .loadout_id = loadout_.id,
+                        .x = x_,
+                        .y = y_,
+                    },
+                },
+        };
     }
 
     void input(const KeyEvent &key_event)

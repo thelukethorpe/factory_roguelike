@@ -22,11 +22,12 @@ class ClientApp
         single_player_session_.input<InputEvent>(event);
     }
 
+    // TODO should probs be private and operating in a thread?
+    void tick(milliseconds_t dt) { single_player_session_.tick(dt); }
+
   private:
     SinglePlayerSession single_player_session_{
         SinglePlayerSession::Args{.loadout = Loadout{.id = LoadoutId::Warper, .speed = 0.1}}};
-
-    void tick(milliseconds_t dt) { single_player_session_.tick(dt); }
 };
 
 #endif
