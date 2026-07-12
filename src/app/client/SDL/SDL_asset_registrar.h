@@ -1,6 +1,7 @@
 #ifndef SDL_ASSET_REGISTRAR_H
 #define SDL_ASSET_REGISTRAR_H
 
+#include "../asset_metadata.h"
 #include <SDL3/SDL.h>
 #include <array>
 #include <core/game/loadout.h>
@@ -31,8 +32,6 @@ class SDLAssetRegistrar
     std::array<Texture, LoadoutId::NumLoadouts> player_textures_;
 
     [[nodiscard]] Texture loadTextureFromFile(const std::string &file_path) const;
-
-    [[nodiscard]] std::string getLoadoutTextureFilePath(LoadoutId loadout_id) const;
 };
 
 #endif

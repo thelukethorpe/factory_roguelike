@@ -3,11 +3,10 @@
 SDLAssetRegistrar::SDLAssetRegistrar(SDL_Renderer *renderer)
     : renderer_(renderer), player_textures_{}
 {
-    // TODO we don't want to bake file locations into the SDL registrar - that metadata should lie
-    // elsewhere
-    for (std::uint32_t i = 0; i < LoadoutId::NumLoadouts; ++i)
+    for (std::size_t i = 0; i < LoadoutId::NumLoadouts; ++i)
     {
-        const auto texture_file_path = getLoadoutTextureFilePath(static_cast<LoadoutId>(i));
+        const auto loadout_id = static_cast<LoadoutId>(i);
+        const auto texture_file_path = AssetMetadata::getLoadoutTextureFilePath(loadout_id);
         player_textures_.at(i) = loadTextureFromFile(texture_file_path);
     }
 }
@@ -57,15 +56,4 @@ SDLAssetRegistrar::loadTextureFromFile(const std::string &file_path) const
     }
 
     return {.sdl_texture = texture, .width = texture_width, .height = texture_height};
-}
-
-std::string SDLAssetRegistrar::getLoadoutTextureFilePath(LoadoutId loadout_id) const
-{
-    switch (loadout_id)
-    {
-    case LoadoutId::Warper:
-        return "player/warper";
-    default:
-        return "";
-    }
 }
