@@ -195,3 +195,30 @@ add_test(
     NAME all_test
     COMMAND tests
 )
+
+#
+# Copy assets to build/assets only when source assets change
+#
+
+file(GLOB_RECURSE ASSET_FILES CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/assets/*"
+)
+
+set(ASSET_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assets")
+set(ASSET_STAMP_FILE "${CMAKE_BINARY_DIR}/.assets.stamp")
+
+add_custom_command(
+    OUTPUT "${ASSET_STAMP_FILE}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${ASSET_OUTPUT_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/assets"
+            "${ASSET_OUTPUT_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E touch "${ASSET_STAMP_FILE}"
+    DEPENDS ${ASSET_FILES} "${CMAKE_SOURCE_DIR}/assets"
+    COMMENT "Syncing assets to build/assets"
+    VERBATIM
+)
+
+add_custom_target(copy_assets DEPENDS "${ASSET_STAMP_FILE}")
+
+add_dependencies(client copy_assets)
