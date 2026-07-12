@@ -26,7 +26,8 @@ SDLAssetRegistrar::loadTextureFromFile(const std::string &file_path) const
     if (surface == nullptr)
     {
         SDL_Log("Couldn't load image: %s", SDL_GetError());
-        return nullptr;
+        return {}; // TODO
+        // return nullptr;
     }
 
     const auto texture_width = surface->w;
@@ -37,7 +38,8 @@ SDLAssetRegistrar::loadTextureFromFile(const std::string &file_path) const
     if (texture == nullptr)
     {
         SDL_Log("Couldn't create static texture: %s", SDL_GetError());
-        return nullptr;
+        return {}; // TODO
+        // return nullptr;
     }
 
     return {.sdl_texture = texture, .width = texture_width, .height = texture_height};
