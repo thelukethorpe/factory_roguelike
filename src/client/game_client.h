@@ -51,7 +51,11 @@ template <typename TClientTransport> class GameClient
         client_connection_manager_.tick();
     }
 
-    View view() const;
+    View view() const
+    {
+        // TODO
+        return {};
+    }
 
     void input(const KeyEvent &key_event)
     {
