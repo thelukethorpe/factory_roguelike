@@ -3,10 +3,16 @@
 
 #include <cstdint>
 
+#define LOADOUT_VALUES                                                                             \
+    F(Warper)                                                                                      \
+    F(Commando)
+
 enum LoadoutId : std::uint8_t
 {
-    Warper,
-    NumLoadouts
+#define F(name) name,
+    LOADOUT_VALUES
+#undef F
+        NumLoadouts
 };
 
 struct Loadout

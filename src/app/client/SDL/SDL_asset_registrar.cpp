@@ -1,4 +1,5 @@
 #include "SDL_asset_registrar.h"
+#include "app/client/asset_metadata.h"
 
 SDLAssetRegistrar::SDLAssetRegistrar(SDL_Renderer *renderer)
     : renderer_(renderer), player_textures_{}
@@ -6,7 +7,7 @@ SDLAssetRegistrar::SDLAssetRegistrar(SDL_Renderer *renderer)
     for (std::size_t i = 0; i < LoadoutId::NumLoadouts; ++i)
     {
         const auto loadout_id = static_cast<LoadoutId>(i);
-        const auto texture_file_path = AssetMetadata::getLoadoutTextureFilePath(loadout_id);
+        const auto texture_file_path = AssetMetadata::LOADOUT_TEXTURE_FILE_PATHS.at(loadout_id);
         player_textures_.at(i) = loadTextureFromFile(texture_file_path);
     }
 }
@@ -28,10 +29,24 @@ SDLAssetRegistrar::Texture SDLAssetRegistrar::getPlayerTexture(LoadoutId loadout
 }
 
 SDLAssetRegistrar::Texture
-SDLAssetRegistrar::loadTextureFromFile(const std::string &file_path) const
+SDLAssetRegistrar::loadTextureFromFile(const std::string_view &file_path) const
 {
     char *full_file_path = nullptr;
-    SDL_asprintf(&full_file_path, "%sassets/%s.bmp", SDL_GetBasePath(), file_path.c_str());
+    const char *base_path = SDL_GetBasePath();
+    if (base_path == nullptr)
+    {
+        SDL_Log("Couldn't get base path: %s", SDL_GetError());
+        return {}; // TODO
+        // return nullptr;
+    }
+
+    if (SDL_asprintf(&full_file_path, "%sassets/%.*s.bmp", base_path,
+                     static_cast<int>(file_path.size()), file_path.data()) < 0)
+    {
+        SDL_Log("Couldn't build file path");
+        return {}; // TODO
+        // return nullptr;
+    }
 
     // TODO convert to SDL_LoadPNG using SDL_image
     auto *surface = SDL_LoadBMP(full_file_path);
