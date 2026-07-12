@@ -9,7 +9,6 @@
 class SDLAssetRegistrar
 {
   public:
-    // TODO this is all readonly - should we add const to more struct fields across the codebase?
     struct Texture
     {
         SDL_Texture *sdl_texture;
@@ -18,7 +17,7 @@ class SDLAssetRegistrar
     };
 
     SDLAssetRegistrar(SDL_Renderer *renderer);
-    ~SDLAssetRegistrar() = default; // TODO free textures in destructor SDL_DestroyTexture
+    ~SDLAssetRegistrar();
     SDLAssetRegistrar(const SDLAssetRegistrar &) = delete;
     SDLAssetRegistrar(SDLAssetRegistrar &&) = delete;
     SDLAssetRegistrar &operator=(const SDLAssetRegistrar &) = delete;
@@ -32,6 +31,8 @@ class SDLAssetRegistrar
     std::array<Texture, LoadoutId::NumLoadouts> player_textures_;
 
     [[nodiscard]] Texture loadTextureFromFile(const std::string &file_path) const;
+
+    [[nodiscard]] std::string getLoadoutTextureFilePath(LoadoutId loadout_id) const;
 };
 
 #endif
