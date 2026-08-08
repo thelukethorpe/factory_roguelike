@@ -8,8 +8,3 @@ echo "Building configuration: $BUILD_TYPE"
 
 cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 cmake --build build
-
-echo "Syncing assets..."
-rm -rf build/assets
-mkdir -p build/assets
-cp -a assets/. build/assets/
