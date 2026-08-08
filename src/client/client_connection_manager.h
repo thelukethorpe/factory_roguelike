@@ -3,7 +3,7 @@
 
 #include <core/op/client_op.h>
 #include <core/op/server_op.h>
-#include <core/transport/transport.h>
+#include <cpp_transport/transport.h>
 #include <core/util/byte_reader.h>
 
 template <typename TClientTransport> class ClientConnectionManager

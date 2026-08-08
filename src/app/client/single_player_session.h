@@ -3,9 +3,9 @@
 
 #include <client/game_client.h>
 #include <core/game/loadout.h>
-#include <core/transport/in_memory_network.h>
 #include <core/util/log.h>
 #include <core/util/time.h>
+#include <cpp_transport/in_memory_network.h>
 #include <server/game_server.h>
 
 class SinglePlayerSession

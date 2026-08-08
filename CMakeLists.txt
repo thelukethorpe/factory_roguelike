@@ -35,6 +35,18 @@ endif()
 include(FetchContent)
 
 #
+# cpp_transport
+#
+
+FetchContent_Declare(
+    cpp_transport
+    GIT_REPOSITORY https://github.com/thelukethorpe/cpp_transport.git
+    GIT_TAG v0.2.0
+)
+
+FetchContent_MakeAvailable(cpp_transport)
+
+#
 # SDL3
 #
 
@@ -90,16 +102,32 @@ file(GLOB_RECURSE CORE_LIB_SOURCES CONFIGURE_DEPENDS
     src/core/*.cpp
 )
 
-add_library(core_lib
-    ${CORE_LIB_SOURCES}
-)
+if(CORE_LIB_SOURCES)
+    add_library(core_lib
+        ${CORE_LIB_SOURCES}
+    )
 
-target_link_libraries(core_lib PUBLIC spdlog::spdlog)
+    target_link_libraries(core_lib PUBLIC cpp_transport::cpp_transport spdlog::spdlog)
 
-target_include_directories(core_lib
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
+    target_include_directories(core_lib
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+else()
+    message(STATUS "core_lib: no src/core/*.cpp found, creating INTERFACE target")
+    add_library(core_lib INTERFACE)
+
+    target_link_libraries(core_lib
+        INTERFACE
+            cpp_transport::cpp_transport
+            spdlog::spdlog
+    )
+
+    target_include_directories(core_lib
+        INTERFACE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+endif()
 
 #
 # Client library (header-only)
